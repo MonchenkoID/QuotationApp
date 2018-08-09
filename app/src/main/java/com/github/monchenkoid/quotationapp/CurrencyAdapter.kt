@@ -6,36 +6,30 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 
-class QuotationAdapter(private val string: String) : RecyclerView.Adapter<QuotationAdapter.QuotationViewHolder>() {
-    private val items: MutableList<Pair<String, Boolean>> = mutableListOf()
+class CurrencyAdapter(private val data: List<CurrencyModel>) : RecyclerView.Adapter<CurrencyAdapter.CurrencyViewHolder>() {
+    private val items: MutableList<CurrencyModel> = data as MutableList<CurrencyModel>
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QuotationViewHolder =
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CurrencyViewHolder =
             LayoutInflater.from(parent.context)
                     .inflate(R.layout.list_item, parent, false)
                     .run {
-                        QuotationViewHolder(this)
+                        CurrencyViewHolder(this)
                     }
 
     override fun getItemCount(): Int = items.size
 
-    fun appendItem(newString: String) =
-            items.add(uniqueString(newString) to false).also {
-                notifyItemInserted(itemCount - 1)
-            }
-
-    override fun onBindViewHolder(holder: QuotationViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: CurrencyViewHolder, position: Int) {
         with(holder) {
             bind(items[position])
         }
     }
 
-    private fun uniqueString(base: String) =
-            "$base ${(Math.random() * 1000).toInt()}"
-
-    inner class QuotationViewHolder(
+    inner class CurrencyViewHolder(
             itemView: View,
-            private val textView1: TextView = itemView.findViewById(R.id.rate),
-            private val textView2: TextView = itemView.findViewById(R.id.name),
+            private val rate: TextView = itemView.findViewById(R.id.rate),
+            private val name: TextView = itemView.findViewById(R.id.name),
+            private val scale: TextView = itemView.findViewById(R.id.scale),
+            private val charCode: TextView = itemView.findViewById(R.id.charCode),
             upButton: View = itemView.findViewById(R.id.up),
             downButton: View = itemView.findViewById(R.id.down)
     ) : RecyclerView.ViewHolder(itemView) {
@@ -43,7 +37,6 @@ class QuotationAdapter(private val string: String) : RecyclerView.Adapter<Quotat
         init {
             upButton.setOnClickListener(moveUp())
             downButton.setOnClickListener(moveDown())
-            textView1.setOnClickListener(toggleText())
         }
 
         private fun moveUp(): (View) -> Unit = {
@@ -64,16 +57,11 @@ class QuotationAdapter(private val string: String) : RecyclerView.Adapter<Quotat
             }
         }
 
-        private fun toggleText(): (View) -> Unit = {
-           items[layoutPosition] = items[layoutPosition].let {
-               it.first to !it.second
-           }
-            notifyItemChanged(layoutPosition)
-        }
-
-        fun bind(data: Pair<String, Boolean>) {
-            textView1.text = data.first
-            textView2.visibility = if (data.second) View.VISIBLE else View.GONE
+        fun bind(data: CurrencyModel) {
+            rate.text = data.rate.toString()
+            name.text = data.name
+            charCode.text = data.charCode
+            scale.text = data.scale.toString()
         }
     }
 }

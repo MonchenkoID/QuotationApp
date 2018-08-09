@@ -4,8 +4,6 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.view.Menu
-import android.view.MenuItem
 import android.widget.Toast
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -13,14 +11,6 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
-
-    private val itemString: String by lazy(LazyThreadSafetyMode.NONE) {
-        getString(R.string.item_string)
-    }
-
-    private val quotationAdapter: QuotationAdapter by lazy(LazyThreadSafetyMode.NONE) {
-        QuotationAdapter(itemString)
-    }
 
     private var disposable: Disposable? = null
 
@@ -33,7 +23,7 @@ class MainActivity : AppCompatActivity() {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        { result -> txt_load_result.text = "${result.getArticles().get(0).name} result found" },
+                        { result -> recyclerView.setup(result.getArticles()) },
                         { error -> Toast.makeText(this, error.message, Toast.LENGTH_SHORT).show() }
                 )
     }
@@ -57,31 +47,11 @@ class MainActivity : AppCompatActivity() {
             setTitle(R.string.app_name)
         }
 
-        recyclerView.setup()
+
     }
 
-    private fun RecyclerView.setup() {
-        adapter = this@MainActivity.quotationAdapter
+    private fun RecyclerView.setup(data: List<CurrencyModel>) {
+        adapter = CurrencyAdapter(data)
         layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
     }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main_menu, menu)
-
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean =
-        when(item?.itemId) {
-            R.id.menu_add -> {
-                addItem()
-                true
-            }
-            else -> null
-        } ?: super.onOptionsItemSelected(item)
-
-    private fun addItem() {
-        quotationAdapter.appendItem(itemString)
-    }
-
 }
