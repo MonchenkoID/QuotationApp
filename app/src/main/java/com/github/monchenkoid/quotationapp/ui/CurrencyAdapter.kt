@@ -1,10 +1,12 @@
-package com.github.monchenkoid.quotationapp
+package com.github.monchenkoid.quotationapp.ui
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.github.monchenkoid.quotationapp.R
+import com.github.monchenkoid.quotationapp.data.CurrencyModel
 
 class CurrencyAdapter(private val data: List<CurrencyModel>) : RecyclerView.Adapter<CurrencyAdapter.CurrencyViewHolder>() {
     private val items: MutableList<CurrencyModel> = data as MutableList<CurrencyModel>
@@ -44,6 +46,7 @@ class CurrencyAdapter(private val data: List<CurrencyModel>) : RecyclerView.Adap
                 items.removeAt(currentPosition).also {
                     items.add(currentPosition - 1, it)
                 }
+
                 notifyItemMoved(currentPosition, currentPosition - 1)
             }
         }
@@ -53,6 +56,7 @@ class CurrencyAdapter(private val data: List<CurrencyModel>) : RecyclerView.Adap
                 items.removeAt(currentPosition).also {
                     items.add(currentPosition + 1, it)
                 }
+
                 notifyItemMoved(currentPosition, currentPosition + 1)
             }
         }

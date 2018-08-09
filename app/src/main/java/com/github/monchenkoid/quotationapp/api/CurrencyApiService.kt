@@ -1,5 +1,6 @@
-package com.github.monchenkoid.quotationapp
+package com.github.monchenkoid.quotationapp.api
 
+import com.github.monchenkoid.quotationapp.data.DailyExRatesModel
 import io.reactivex.Observable
 import org.simpleframework.xml.convert.AnnotationStrategy
 import org.simpleframework.xml.core.Persister

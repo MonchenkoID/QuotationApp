@@ -5,6 +5,9 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.widget.Toast
+import com.github.monchenkoid.quotationapp.api.CurrencyApiService
+import com.github.monchenkoid.quotationapp.data.CurrencyModel
+import com.github.monchenkoid.quotationapp.ui.CurrencyAdapter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -28,26 +31,17 @@ class MainActivity : AppCompatActivity() {
                 )
     }
 
-    override fun onPause() {
-        super.onPause()
-        disposable?.dispose()
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_main)
+        loadDataSearch()
+    }
 
-        btn_load.setOnClickListener {
-                loadDataSearch()
-        }
+    override fun onPause() {
+        super.onPause()
 
-        setSupportActionBar(toolbar)
-        supportActionBar?.apply {
-            setDisplayShowTitleEnabled(true)
-            setTitle(R.string.app_name)
-        }
-
-
+        disposable?.dispose()
     }
 
     private fun RecyclerView.setup(data: List<CurrencyModel>) {

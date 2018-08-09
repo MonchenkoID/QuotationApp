@@ -1,4 +1,4 @@
-package com.github.monchenkoid.quotationapp;
+package com.github.monchenkoid.quotationapp.data;
 
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
