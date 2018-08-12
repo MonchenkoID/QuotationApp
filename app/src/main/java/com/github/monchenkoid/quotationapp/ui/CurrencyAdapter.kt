@@ -1,5 +1,6 @@
 package com.github.monchenkoid.quotationapp.ui
 
+import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.github.monchenkoid.quotationapp.R
 import com.github.monchenkoid.quotationapp.data.CurrencyModel
+import com.github.monchenkoid.quotationapp.utils.StringUtil
 
 class CurrencyAdapter(private val data: List<CurrencyModel>) : RecyclerView.Adapter<CurrencyAdapter.CurrencyViewHolder>() {
     private val items: MutableList<CurrencyModel> = data as MutableList<CurrencyModel>
@@ -28,12 +30,11 @@ class CurrencyAdapter(private val data: List<CurrencyModel>) : RecyclerView.Adap
 
     inner class CurrencyViewHolder(
             itemView: View,
-            private val rate: TextView = itemView.findViewById(R.id.rate),
-            private val name: TextView = itemView.findViewById(R.id.name),
-            private val scale: TextView = itemView.findViewById(R.id.scale),
-            private val charCode: TextView = itemView.findViewById(R.id.charCode),
+            private val rate: TextView = itemView.findViewById(R.id.first_line),
+            private val name: TextView = itemView.findViewById(R.id.second_line),
             upButton: View = itemView.findViewById(R.id.up),
-            downButton: View = itemView.findViewById(R.id.down)
+            downButton: View = itemView.findViewById(R.id.down),
+            private val context: Context = itemView.context
     ) : RecyclerView.ViewHolder(itemView) {
 
         init {
@@ -62,10 +63,8 @@ class CurrencyAdapter(private val data: List<CurrencyModel>) : RecyclerView.Adap
         }
 
         fun bind(data: CurrencyModel) {
-            rate.text = data.rate.toString()
-            name.text = data.name
-            charCode.text = data.charCode
-            scale.text = data.scale.toString()
+            rate.text = StringUtil.format(context.getString(R.string.first_line), data.charCode, data.rate.toString());
+            name.text = StringUtil.format(context.getString(R.string.second_line), data.name, data.scale.toString());
         }
     }
 }

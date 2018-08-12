@@ -21,9 +21,10 @@ public class CurrencyModel {
     @Element(name = "Rate")
     public double rate;
 
-    public CurrencyModel(){}
+    public CurrencyModel() {
+    }
 
-    public String getName(){
+    public String getName() {
         return name;
     }
 }

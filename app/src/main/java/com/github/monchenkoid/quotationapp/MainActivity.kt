@@ -1,5 +1,6 @@
 package com.github.monchenkoid.quotationapp
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -12,6 +13,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
+import android.net.ConnectivityManager
+import android.view.View
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -35,7 +39,16 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_main)
-        loadDataSearch()
+
+        val connectivityManager = baseContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        val activeNetwork = connectivityManager.activeNetworkInfo
+        if (activeNetwork != null && activeNetwork.isConnectedOrConnecting) {
+            no_internet_message.visibility = View.INVISIBLE
+            loadDataSearch()
+        } else {
+            no_internet_message.visibility = View.VISIBLE
+        }
     }
 
     override fun onPause() {
