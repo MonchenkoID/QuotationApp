@@ -1,6 +1,5 @@
 package com.github.monchenkoid.quotationapp
 
-import android.content.Context
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -13,16 +12,47 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
-import android.net.ConnectivityManager
 import android.view.View
+import com.github.monchenkoid.quotationapp.utils.ConnectionReceiver
 
-
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ConnectionReceiver.ConnectionReceiverListener {
 
     private var disposable: Disposable? = null
 
     private val currencyServe by lazy {
         CurrencyApiService.create()
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        setContentView(R.layout.activity_main)
+        checkConnection(ConnectionReceiver.isConnected)
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        disposable?.dispose()
+        CustomApplication.mInstance.setConnectionListener(this)
+    }
+
+    private fun RecyclerView.setup(data: List<CurrencyModel>) {
+        adapter = CurrencyAdapter(data)
+        layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
+    }
+
+    override fun onNetworkConnectionChanged(isConnected: Boolean) {
+        checkConnection(isConnected)
+    }
+
+    fun checkConnection(isConnected: Boolean) {
+        if (isConnected) {
+            no_internet_message.visibility = View.INVISIBLE
+            loadDataSearch()
+        } else {
+            no_internet_message.visibility = View.VISIBLE
+        }
     }
 
     private fun loadDataSearch() {
@@ -33,32 +63,5 @@ class MainActivity : AppCompatActivity() {
                         { result -> recyclerView.setup(result.getArticles()) },
                         { error -> Toast.makeText(this, error.message, Toast.LENGTH_SHORT).show() }
                 )
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        setContentView(R.layout.activity_main)
-
-        val connectivityManager = baseContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-
-        val activeNetwork = connectivityManager.activeNetworkInfo
-        if (activeNetwork != null && activeNetwork.isConnectedOrConnecting) {
-            no_internet_message.visibility = View.INVISIBLE
-            loadDataSearch()
-        } else {
-            no_internet_message.visibility = View.VISIBLE
-        }
-    }
-
-    override fun onPause() {
-        super.onPause()
-
-        disposable?.dispose()
-    }
-
-    private fun RecyclerView.setup(data: List<CurrencyModel>) {
-        adapter = CurrencyAdapter(data)
-        layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
     }
 }
