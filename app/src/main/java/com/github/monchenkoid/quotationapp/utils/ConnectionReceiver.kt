@@ -10,7 +10,7 @@ import com.github.monchenkoid.quotationapp.CustomApplication
 
 class ConnectionReceiver : BroadcastReceiver() {
 
-    override fun onReceive(context: Context, arg1: Intent) {
+    override fun onReceive(context: Context, arg: Intent) {
         val connectivityManager = context
                 .getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val activeNetwork = connectivityManager.activeNetworkInfo
