@@ -14,7 +14,7 @@ public class DailyExRatesModel {
     public DailyExRatesModel() {
     }
 
-    public List<CurrencyModel> getArticles() {
+    public List<CurrencyModel> getCurrencies() {
         return currencyModels;
     }
 }

@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity(), ConnectionReceiver.ConnectionReceiverL
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        { result -> recyclerView.setup(result.getArticles()) },
+                        { result -> recyclerView.setup(result.getCurrencies()) },
                         { error -> Toast.makeText(this, error.message, Toast.LENGTH_SHORT).show() }
                 )
     }
